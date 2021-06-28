@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, Text, View } from 'react-native';
-import {io} from 'socket.io-client'
-import {SERVER_URL} from './config.js'
+
 
 import Home from './components/home.js';
 import QuickWord from './components/quickWord/quickWord.js';
@@ -11,12 +10,12 @@ import MagicNumber from './components/magicNumber/magicNumber.js';
 import Pregame from './components/pregame.js';
 
 const Stack = createStackNavigator();
-export const socketB = io(SERVER_URL)
+//export const socketB = io(SERVER_URL)
 
 export default class App extends Component {
   
   componentDidMount() {
-   const socket = socketB
+   //const socket = socketB
     
   }
 
@@ -46,7 +45,6 @@ export default class App extends Component {
     } */
   return (
     <NavigationContainer>
-      <Text>Welcome to cross pwgame!</Text>
         <Stack.Navigator initialRouteName="Pregame" screenOptions={{headerShown: false, gestureEnabled: false}}>
           <Stack.Screen name="Pregame" component={Pregame} />
           <Stack.Screen name="QuickWord" component={QuickWord} />

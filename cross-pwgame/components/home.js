@@ -10,6 +10,7 @@ export default class MagicNumber extends React.Component {
         return (
             <SafeAreaView style={styles.container}>
             <Text style={{fontSize:50}}>Home</Text>
+            <Text style={{fontSize:20,marginBottom:5}}>Welcome to cross pwgame!</Text>
             <TouchableOpacity style={styles.signupBtn}
                     onPress={() => navigation.navigate('Pregame') }>
                     <Text style={styles.loginText}>       ROOM        </Text>
@@ -22,7 +23,7 @@ export default class MagicNumber extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#003f5c',
+        backgroundColor: '#818181',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: StatusBar.currentHeight,

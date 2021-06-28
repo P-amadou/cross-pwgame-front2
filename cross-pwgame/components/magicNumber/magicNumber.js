@@ -13,7 +13,7 @@ export default class MagicNumber extends React.Component {
             show: false,
             winner: false,
             loser: false,
-            finalNum: null
+            finalNum: ''
 
         };
         this.runMagicNumber = this.runMagicNumber.bind(this);
@@ -43,18 +43,20 @@ export default class MagicNumber extends React.Component {
 
     render() {
         const { navigation } = this.props
-        
-
+        if(this.state.finalNum == ''){
+            this.screenLoad()
+        }
         return (
             <SafeAreaView style={styles.container}>
                 <View>
-                    {this.screenLoad}
+                    
                     <Text>Magic Number Game</Text>
                     <View style={styles.inputView}>
                         <Text>Guess a number between 0 and 1337</Text>
                         <TextInput
                             style={styles.inputText}
                             // onSubmitEditing={() => { numberInput.focus(); }}
+                            keyboardType="numeric"
                             onChangeText={(number) => this.setState({ number })}
                         />
                     </View>
@@ -72,8 +74,7 @@ export default class MagicNumber extends React.Component {
                         <View style={{ backgroundColor: "#000", flex: 1 }}>
                             <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                 <Text style={{ fontSize: 50 }}>You win congrats!</Text>
-                                {this.setState({ winner: false })}
-                                <Button title="Close" onPress={() => { this.setState({ show: false }) }} />
+                                <Button title="Close" onPress={() => { this.setState({ show: false,win:false }) }} />
                             </View>
                         </View>
                     </Modal> : <Text></Text>}
@@ -82,8 +83,7 @@ export default class MagicNumber extends React.Component {
                             <View style={{ backgroundColor: "#000", flex: 1 }}>
                                 <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                     <Text style={{ fontSize: 50 }}>Sorry you lose</Text>
-                                    {this.setState({ loser: false })}
-                                    <Button title="Close" onPress={() => { this.setState({ show: false }) }} />
+                                    <Button title="Close" onPress={() => { this.setState({ show: false,loser:false }) }} />
                                 </View>
                             </View>
                         </Modal> : <Text></Text>}

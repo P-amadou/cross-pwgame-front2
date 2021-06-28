@@ -1,6 +1,10 @@
 import React from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, StyleSheet, TextInput, VirtualizedList, ScrollView, StatusBar, ToastAndroid } from "react-native";
-import { socketB } from '../App'
+import { SafeAreaView, Text, View, TouchableOpacity, StyleSheet, TextInput, FlatList, StatusBar, ToastAndroid, } from "react-native";
+//import { socketB } from '../App'
+import { io } from 'socket.io-client'
+import { SERVER_URL } from '../config'
+
+const socketB = io(SERVER_URL)
 
 const player = {
     host: false,
@@ -10,20 +14,79 @@ const player = {
     turn: false,
     win: false
 }
-const DATA = [];
 
-const getItem = (data, index) => ({
+const DATA = [{
+    id: 1,
+    roomID: 'AZER2',
+    playerName: 'azert'
+},
+{
+    id: 2,
+    roomID: 'AZER3',
+    playerName: 'azery'
+},
+{
+    id: 3,
+    roomID: 'AZER4',
+    playerName: 'azeru'
+},
+{
+    id: 4,
+    roomID: 'AZER5',
+    playerName: 'azeri'
+},
+{
+    id: 5,
+    roomID: 'AZER6',
+    playerName: 'azero'
+},
+{
+    id: 6,
+    roomID: 'AZER7',
+    playerName: 'azerp'
+},
+{
+    id: 7,
+    roomID: 'AZER8',
+    playerName: 'azeroq'
+},
+{
+    id: 8,
+    roomID: 'AZER9',
+    playerName: 'azerps'
+},
+{
+    id: 9,
+    roomID: 'AZER10',
+    playerName: 'azerod'
+},
+{
+    id: 10,
+    roomID: 'AZER11',
+    playerName: 'azerpf'
+},
+];
+
+/* const getItem = (data, index) => ({
     roomID: room.id,
     playerName: room.players[0].username
 });
 
-const getItemCount = (data) => 20;
+const getItemCount = (data) => 20; */
 
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-    </View>
-);
+function Item({ roomId, username }) {
+    /* const handlePress = (id) => {
+        const salons = rooms.find((salon) => {
+            return salon.id === id
+        })
+    } */
+    return (
+        <TouchableOpacity style={styles.touchableBtn}>
+            <Text style={styles.title}>RoomID: {roomId}</Text>
+            <Text style={styles.title}>Players: {username}</Text>
+        </TouchableOpacity>
+    )
+};
 
 export default class Pregame extends React.Component {
     constructor(props) {
@@ -45,27 +108,44 @@ export default class Pregame extends React.Component {
         socketB.emit('playerData', player)
 
     }
+
+    componentDidMount() {
+
+    }
+
     render() {
         const { navigation } = this.props
         let opponentUsername
         socketB.emit('get rooms')
-        /* socketB.on('list rooms',(rooms)=>{
-                    let rend 
-                    if (room.players.length > 1) {
-                        
-                        //rend = <ListAccessoriesShowcase />
-                        return(
-                            rend
-                        )
-                    }
+        socketB.on('list rooms', (rooms) => {
+            let rend
+            if (rooms.length > 0) {
+                rooms.forEach(room => {
+                    
+                    if (room.players.length == 1) {
         
-                    if (rend !== null || undefined) {
-                        //rend = <ListAccessoriesShowcase />
-                        return(
-                            rend
-                        )
+                        rend = <FlatList
+                        data={rooms}
+                        renderItem={({ item }) => (
+                            <Item roomId={item.roomId} username={item.username} />
+                        )}
+                        style={{backgroundColor:'#696969'}}
+                    />
                     }
-                }) */
+                });
+            }
+
+            if (rend !== null || undefined) {
+                //rend = <ListAccessoriesShowcase />
+                rend = <FlatList
+                data={rooms}
+                renderItem={({ item }) => (
+                    <Item roomId={item.roomId} username={item.username} />
+                )}
+                style={{backgroundColor:'#696969'}}
+            />
+            }
+        }) 
 
         socketB.on('start game', (players) => {
             startGame(players)
@@ -79,54 +159,58 @@ export default class Pregame extends React.Component {
 
             if (player.host && player.turn) {
 
-                ToastAndroid.show("A pikachu appeared nearby !", ToastAndroid.SHORT);
+                ToastAndroid.show("Your turn !", ToastAndroid.SHORT);
 
             }
         }
         return (
             <SafeAreaView style={styles.container}>
-                <View>
-                    <Text>Player name</Text>
+                <View style={styles.container,{backgroundColor:'#696969',alignItems:"center"}}>
+                    <Text style={styles.basicText}>Player name</Text>
                     <TextInput
                         style={styles.inputText}
                         //onSubmitEditing={() => { numberInput.focus(); }}
                         onChangeText={(playerName) => this.setState({ playerName })}
                     />
-                    <Text>Room</Text>
+                    <Text style={styles.basicText}>Room</Text>
                     <TextInput
                         style={styles.inputText}
                         //onSubmitEditing={() => { numberInput.focus(); }}
                         onChangeText={(roomNumber) => this.setState({ roomNumber })}
                     />
+                    
                     <TouchableOpacity
-                        style={styles.signupBtn}
+                        style={styles.btn}
                         onPress={this.getUserData}>
-                        <Text style={styles.loginText}>VALIDATE</Text>
+                        <Text style={styles.basicText}>CREATE ROOM</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={styles.signupBtn}
+                        style={styles.btn}
                         onPress={() => navigation.navigate('QuickWord')}>
-                        <Text style={styles.loginText}>JOIN ROOM QUICK WORD</Text>
+                        <Text style={styles.basicText}>JOIN ROOM QUICK WORD</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.signupBtn}
+                    <TouchableOpacity style={styles.btn}
                         onPress={() => navigation.navigate('MagicNumber')}>
-                        <Text style={styles.loginText}>JOIN ROOM MAGIC NUMBER</Text>
+                        <Text style={styles.basicText}>JOIN ROOM MAGIC NUMBER</Text>
                     </TouchableOpacity>
-                    {/* <View>
-                        <Text>Rooms Avaible</Text>
-                        {{}}
-                        <VirtualizedList
-                            key={getItem.index}
-                            data={DATA}
-                            initialNumToRender={4}
-                            renderItem={({ item }) => <Item title={item.playerName} />}
-                            keyExtractor={item => item.roomID}
-                            getItemCount={getItemCount}
-                            getItem={getItem}
-                        />
-                    </View> */}
+                    <Text style={styles.title}>Rooms avaible tap to join</Text>
+                    </View>
+                    {/* <FlatList
+                        data={DATA}
+                        renderItem={({ item }) => (
+                            <Item roomID={item.roomID} playerName={item.playerName} />
+                        )}
+                        style={{backgroundColor:'#696969'}}
+                    /> */}
+                    <FlatList
+                data={rooms}
+                renderItem={({ item }) => (
+                    <Item roomId={item.roomId} username={item.username} />
+                )}
+                style={{backgroundColor:'#696969'}}
+            />
 
-                </View>
+                
             </SafeAreaView>
         );
     }
@@ -135,10 +219,11 @@ export default class Pregame extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#003f5c',
+        backgroundColor: '#696969',
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: StatusBar.currentHeight,
+        
     },
     inputView: {
         width: "80%",
@@ -151,13 +236,11 @@ const styles = StyleSheet.create({
     },
     inputText: {
         height: 50,
-        color: "white"
-    },
-    forgot: {
         color: "white",
-        fontSize: 11
+        borderColor: "#fff",
+        marginBottom:10
     },
-    loginBtn: {
+    btn: {
         width: "80%",
         backgroundColor: "#fb5b5a",
         borderRadius: 25,
@@ -166,15 +249,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBottom: 10
     },
-    signupBtn: {
-        width: "80%",
-        backgroundColor: "#fb5b5a",
-        borderRadius: 25,
-        height: 50,
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    loginText: {
+    basicText: {
+        fontSize: 15,
         color: "white"
     },
     container: {
@@ -197,5 +273,10 @@ const styles = StyleSheet.create({
     scrollView: {
         backgroundColor: 'grey',
         marginHorizontal: 20,
+    },
+    touchableBtn: {
+        backgroundColor: "#818181",
+        margin:5,
+        
     },
 });
