@@ -1,0 +1,12 @@
+{
+  "name": "cross-pwgame",
+  "displayName": "cross-pwgame",
+  "expo": {
+    "name": "cross-pwgame",
+    "slug": "cross-pwgame",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+export const SERVER_URL='http://bdf302dadd1e.ngrok.io'
