@@ -1,1 +1,1 @@
-export const SERVER_URL='http://5b52ab455550.ngrok.io' //url ngrok http 8080
+export const SERVER_URL='http://f59ad3e7f9b0.ngrok.io' //url ngrok http 8080

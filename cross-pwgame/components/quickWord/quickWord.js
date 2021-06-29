@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Text, StatusBar, View, TextInput, TouchableOpacity, StyleSheet, Modal, Button, SafeAreaView  } from 'react-native';
+import { player } from '../pregame';
 
 let randomWords = require('random-words');
 let user1Point = 0;
@@ -27,6 +28,9 @@ export default class QuickWord extends React.Component {
             this.setState({ winner: true })
         } else {
             this.setState({ loser: true })
+        }
+        if (player.points >= 15) {
+            player.win = true
         }
     }
 
@@ -70,6 +74,7 @@ export default class QuickWord extends React.Component {
                         <View style={{ backgroundColor: "#000", flex: 1 }}>
                             <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                 <Text style={{ fontSize: 50 }}>You win congrats!</Text>
+                                <Text>Player {player.username} points : {player.points++}</Text>
                                 {this.textInput.clear()}
                                 <Button title="Close" onPress={() => { this.setState({ show: false,win:false,finalWord:'' }) }} />
                             </View>
@@ -84,6 +89,26 @@ export default class QuickWord extends React.Component {
                                 </View>
                             </View>
                         </Modal> : <Text></Text>}
+                        {player.win == true ? <Modal transparent={true} visible={this.state.show}>
+                        <View style={{ backgroundColor: "#000", flex: 1 }}>
+                            <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
+                            <Text style={{ fontSize: 30 }}>{player.username}, You win the party congrats !</Text>
+                                <Text style={{fontSize:0}}>{player.win = false, player.points = 0}</Text>
+
+                                <Button title="Close" onPress={() => { this.setState({ show: false,winner:false ,finalNum: ''}) }} />
+                            </View>
+                        </View>
+                    </Modal> : <Text></Text>}
+                    {/* {player.win == false ? <Modal transparent={true} visible={this.state.show}>
+                        <View style={{ backgroundColor: "#000", flex: 1 }}>
+                            <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
+                                <Text style={{ fontSize: 50 }}>Sorry {player.username}, you lose the party !</Text>
+                                <Text style={{fontSize:0}}>{player.win = false, player.points = 0}</Text>
+                                <Button title="Close" onPress={() => { this.setState({ show: false,winner:false ,finalNum: ''}) }} />
+                            </View>
+                        </View>
+                    </Modal> : <Text></Text>} */}
+
             </View>
             </SafeAreaView>
         );

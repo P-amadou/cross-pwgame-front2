@@ -35,13 +35,13 @@ export default class MagicNumber extends React.Component {
             this.setState({ winner: true })
         } else {
             if (this.state.number > this.state.finalNum) {
-              this.setState({minus: true})  
-            }else{
-                this.setState({plus: true})  
+                this.setState({ minus: true })
+            } else {
+                this.setState({ plus: true })
             }
             this.setState({ loser: true })
         }
-        if (player.points == 3) {
+        if (player.points >= 3) {
             player.win = true
         }
     }
@@ -54,18 +54,18 @@ export default class MagicNumber extends React.Component {
 
     render() {
         const { navigation } = this.props
-        if(this.state.finalNum == ''){
+        if (this.state.finalNum == '') {
             this.screenLoad()
         }
         return (
             <SafeAreaView style={styles.container}>
                 <View>
-                    
+
                     <Text>Magic Number Game</Text>
                     <View style={styles.inputView}>
                         <Text>Guess a number between 0 and 1337</Text>
                         <TextInput
-                            style={styles.inputText,{borderWidth:1}}
+                            style={styles.inputText, { borderWidth: 1 }}
                             // onSubmitEditing={() => { numberInput.focus(); }}
                             keyboardType="numeric"
                             onChangeText={(number) => this.setState({ number })}
@@ -82,34 +82,37 @@ export default class MagicNumber extends React.Component {
                         onPress={() => navigation.navigate('Home')}>
                         <Text style={styles.loginText}>Home</Text>
                     </TouchableOpacity>
-                    {this.state.winner == true ? <Modal transparent={true} visible={this.state.show}>
-                        <View style={{ backgroundColor: "#000", flex: 1 }}>
-                            <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
-                                <Text style={{ fontSize: 50 }}>You win congrats!</Text>
-                                {player.points++}
-                                {this.textInput.clear()}
-                                <Button title="Close" onPress={() => { this.setState({ show: false,win:false ,finalNum: ''}),player.win=0 }} />
+                    {this.state.winner == true ?
+                        <Modal transparent={true} visible={this.state.show}>
+                            <View style={{ backgroundColor: "#000", flex: 1 }}>
+                                <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
+                                    <Text style={{ fontSize: 50 }}>You win congrats!</Text>
+                                    <Text>Player {player.username} points : {player.points+=1}</Text>
+                                    {this.textInput.clear()}
+                                    <Button title="Close" onPress={() => { this.setState({ show: false, win: false, finalNum: '' }) }} />
+                                </View>
                             </View>
-                        </View>
-                    </Modal> : <Text></Text>}
+                        </Modal> : <Text></Text>}
                     {this.state.loser == true ?
                         <Modal transparent={true} visible={this.state.show}>
                             <View style={{ backgroundColor: "#000", flex: 1 }}>
                                 <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                     <Text style={{ fontSize: 50 }}>Sorry you lose</Text>
-                                    {this.state.plus == true ? <Text style={{fontSize: 25, color:'red'}}>Number is plus</Text>:<Text style={{fontSize: 25, color:'red'}}>Number is minus</Text>}
-                                    <Button title="Close" onPress={() => { this.setState({ show: false,loser:false,minus:false,plus:false }) }} />
+                                    {this.state.plus == true ? <Text style={{ fontSize: 25, color: 'red' }}>Number is plus</Text> : <Text style={{ fontSize: 25, color: 'red' }}>Number is minus</Text>}
+                                    <Button title="Close" onPress={() => { this.setState({ show: false, loser: false, minus: false, plus: false }) }} />
                                 </View>
                             </View>
                         </Modal> : <Text></Text>}
-                        {player.win == true ? <Modal transparent={true} visible={this.state.show}>
-                        <View style={{ backgroundColor: "#000", flex: 1 }}>
-                            <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
-                                <Text style={{ fontSize: 50 }}>You win congrats!</Text>
-                                <Button title="Close" onPress={() => { this.setState({ show: false,winner:false ,finalNum: ''}) }} />
+                    {player.win == true ?
+                        <Modal transparent={true} visible={this.state.show}>
+                            <View style={{ backgroundColor: "#000", flex: 1 }}>
+                                <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
+                                    <Text style={{ fontSize: 30 }}>{player.username}, You win the party congrats !</Text>
+                                    <Text style={{fontSize:0}}>{player.win = false, player.points = 0}</Text>
+                                    <Button title="Close" onPress={() => { this.setState({ show: false, winner: false, finalNum: '' }) }} />
+                                </View>
                             </View>
-                        </View>
-                    </Modal> : <Text></Text>}
+                        </Modal> : <Text></Text>}
 
 
 

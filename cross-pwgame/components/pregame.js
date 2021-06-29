@@ -13,7 +13,7 @@ export const player = {
     socketId: "",
     turn: false,
     win: false,
-    points:0
+    points: 0
 }
 
 const DATA = [{
@@ -81,6 +81,7 @@ function Item({ roomId, username }) {
             return salon.id === id
         })
     } */
+
     return (
         <TouchableOpacity style={styles.touchableBtn}>
             <Text style={styles.title}>RoomID: {roomId}</Text>
@@ -118,39 +119,45 @@ export default class Pregame extends React.Component {
     render() {
         const { navigation } = this.props
         let opponentUsername
+        var i = 0
         socketB.emit('get rooms')
         socketB.on('list rooms', (rooms) => {
-            console.log(rooms)
+            //console.log(rooms)
             if (rooms.length > 0) {
                 rooms.forEach(room => {
-                    
                     if (room.players.length == 1) {
-        
-                        this.setState({rend : <FlatList
-                        data={rooms}
-                        renderItem={({ item }) => (
-                            <Item roomId={item.roomId} username={item.username} />
-                        )}
-                        style={{backgroundColor:'#696969'}}
-                    />
+                        this.setState({
+                            rend: <FlatList
+                                data={room.players}
+                                renderItem={() => (
+                                    <Item roomId={room.players[0].roomId} username={room.players[0].username} />
+                                )}
+                                style={{ backgroundColor: '#696969' }}
+                            />
                         })
                     }
-                    
+
                 });
             }
+           
+            rooms.forEach(room => {
+                if (this.state.rend !== null || undefined) {
+                    //rend = <ListAccessoriesShowcase />
+                    this.setState({
+                        rend: <FlatList
+                            data={room.players}
+                            renderItem={() => (
+                                <Item roomId={room.players[0].roomId} username={room.players[0].username} />
+                            )}
+                            style={{ backgroundColor: '#696969' }}
+                        />
+                    })
 
-            if (this.state.rend !== null || undefined) {
-                //rend = <ListAccessoriesShowcase />
-                this.setState({rend : <FlatList
-                data={rooms}
-                renderItem={({ item }) => (
-                    <Item roomId={item.roomId} username={item.username} />
-                )}
-                style={{backgroundColor:'#696969'}}
-            />
-                })
-            }
-        }) 
+                }
+            })
+        })
+    
+
 
         socketB.on('start game', (players) => {
             startGameMagicNumber(players)
@@ -184,20 +191,20 @@ export default class Pregame extends React.Component {
         }
         return (
             <SafeAreaView style={styles.container}>
-                <View style={styles.container,{backgroundColor:'#696969',alignItems:"center"}}>
+                <View style={styles.container, { backgroundColor: '#696969', alignItems: "center" }}>
                     <Text style={styles.basicText}>Player name</Text>
                     <TextInput
-                        style={styles.inputText,{borderWidth:1}}
+                        style={styles.inputText, { borderWidth: 1 }}
                         //onSubmitEditing={() => { numberInput.focus(); }}
                         onChangeText={(playerName) => this.setState({ playerName })}
                     />
                     <Text style={styles.basicText}>Room</Text>
                     <TextInput
-                        style={styles.inputText,{borderWidth:1}}
+                        style={styles.inputText, { borderWidth: 1 }}
                         //onSubmitEditing={() => { numberInput.focus(); }}
                         onChangeText={(roomNumber) => this.setState({ roomNumber })}
                     />
-                    
+
                     <TouchableOpacity
                         style={styles.btn}
                         onPress={this.getUserData}>
@@ -213,16 +220,16 @@ export default class Pregame extends React.Component {
                         <Text style={styles.basicText}>JOIN ROOM MAGIC NUMBER</Text>
                     </TouchableOpacity>
                     <Text style={styles.title}>Rooms avaible tap to join</Text>
-                    </View>
-                    {/* <FlatList
+                </View>
+                {/* <FlatList
                 data={rooms}
                 renderItem={({ item }) => (
                     <Item roomId={item.roomId} username={item.username} />
                 )}
                 style={{backgroundColor:'#696969'}}
             /> */}
-            {this.state.rend}
-                
+                {this.state.rend}
+
             </SafeAreaView>
         );
     }
@@ -235,7 +242,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         marginTop: StatusBar.currentHeight,
-        
+
     },
     inputView: {
         backgroundColor: "#465881",
@@ -247,7 +254,7 @@ const styles = StyleSheet.create({
     },
     inputText: {
         color: "white",
-        marginBottom:20
+        marginBottom: 20
     },
     btn: {
         width: "80%",
@@ -285,7 +292,7 @@ const styles = StyleSheet.create({
     },
     touchableBtn: {
         backgroundColor: "#818181",
-        margin:5,
-        
+        margin: 5,
+
     },
 });
