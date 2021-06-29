@@ -13,7 +13,9 @@ export default class MagicNumber extends React.Component {
             show: false,
             winner: false,
             loser: false,
-            finalNum: ''
+            finalNum: '',
+            plus: false,
+            minus: false
 
         };
         this.runMagicNumber = this.runMagicNumber.bind(this);
@@ -31,6 +33,11 @@ export default class MagicNumber extends React.Component {
         if (this.state.number == this.state.finalNum) {
             this.setState({ winner: true })
         } else {
+            if (this.state.number > this.state.finalNum) {
+              this.setState({minus: true})  
+            }else{
+                this.setState({plus: true})  
+            }
             this.setState({ loser: true })
         }
     }
@@ -54,10 +61,11 @@ export default class MagicNumber extends React.Component {
                     <View style={styles.inputView}>
                         <Text>Guess a number between 0 and 1337</Text>
                         <TextInput
-                            style={styles.inputText}
+                            style={styles.inputText,{borderWidth:1}}
                             // onSubmitEditing={() => { numberInput.focus(); }}
                             keyboardType="numeric"
                             onChangeText={(number) => this.setState({ number })}
+                            ref={input => { this.textInput = input }}
                         />
                     </View>
 
@@ -74,7 +82,8 @@ export default class MagicNumber extends React.Component {
                         <View style={{ backgroundColor: "#000", flex: 1 }}>
                             <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                 <Text style={{ fontSize: 50 }}>You win congrats!</Text>
-                                <Button title="Close" onPress={() => { this.setState({ show: false,win:false }) }} />
+                                {this.textInput.clear()}
+                                <Button title="Close" onPress={() => { this.setState({ show: false,win:false ,finalNum: ''}) }} />
                             </View>
                         </View>
                     </Modal> : <Text></Text>}
@@ -83,7 +92,8 @@ export default class MagicNumber extends React.Component {
                             <View style={{ backgroundColor: "#000", flex: 1 }}>
                                 <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                     <Text style={{ fontSize: 50 }}>Sorry you lose</Text>
-                                    <Button title="Close" onPress={() => { this.setState({ show: false,loser:false }) }} />
+                                    {this.state.plus == true ? <Text style={{fontSize: 25, color:'red'}}>Number is plus</Text>:<Text style={{fontSize: 25, color:'red'}}>Number is minus</Text>}
+                                    <Button title="Close" onPress={() => { this.setState({ show: false,loser:false,minus:false,plus:false }) }} />
                                 </View>
                             </View>
                         </Modal> : <Text></Text>}

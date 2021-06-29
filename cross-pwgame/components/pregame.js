@@ -168,13 +168,13 @@ export default class Pregame extends React.Component {
                 <View style={styles.container,{backgroundColor:'#696969',alignItems:"center"}}>
                     <Text style={styles.basicText}>Player name</Text>
                     <TextInput
-                        style={styles.inputText}
+                        style={styles.inputText,{borderWidth:1}}
                         //onSubmitEditing={() => { numberInput.focus(); }}
                         onChangeText={(playerName) => this.setState({ playerName })}
                     />
                     <Text style={styles.basicText}>Room</Text>
                     <TextInput
-                        style={styles.inputText}
+                        style={styles.inputText,{borderWidth:1}}
                         //onSubmitEditing={() => { numberInput.focus(); }}
                         onChangeText={(roomNumber) => this.setState({ roomNumber })}
                     />
@@ -202,13 +202,13 @@ export default class Pregame extends React.Component {
                         )}
                         style={{backgroundColor:'#696969'}}
                     /> */}
-                    <FlatList
+                    {/* <FlatList
                 data={rooms}
                 renderItem={({ item }) => (
                     <Item roomId={item.roomId} username={item.username} />
                 )}
                 style={{backgroundColor:'#696969'}}
-            />
+            /> */}
 
                 
             </SafeAreaView>
@@ -226,7 +226,6 @@ const styles = StyleSheet.create({
         
     },
     inputView: {
-        width: "80%",
         backgroundColor: "#465881",
         borderRadius: 25,
         height: 50,
@@ -235,10 +234,8 @@ const styles = StyleSheet.create({
         padding: 20
     },
     inputText: {
-        height: 50,
         color: "white",
-        borderColor: "#fff",
-        marginBottom:10
+        marginBottom:20
     },
     btn: {
         width: "80%",
