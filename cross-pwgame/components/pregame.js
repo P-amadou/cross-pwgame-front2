@@ -6,13 +6,14 @@ import { SERVER_URL } from '../config'
 
 const socketB = io(SERVER_URL)
 
-const player = {
+export const player = {
     host: false,
     roomId: null,
     username: "",
     socketId: "",
     turn: false,
-    win: false
+    win: false,
+    points:0
 }
 
 const DATA = [{
@@ -93,7 +94,8 @@ export default class Pregame extends React.Component {
         super(props);
         this.state = {
             roomNumber: '',
-            playerName: ""
+            playerName: "",
+            rend: null,
         };
         this.getUserData = this.getUserData.bind(this);
 
@@ -118,41 +120,58 @@ export default class Pregame extends React.Component {
         let opponentUsername
         socketB.emit('get rooms')
         socketB.on('list rooms', (rooms) => {
-            let rend
+            console.log(rooms)
             if (rooms.length > 0) {
                 rooms.forEach(room => {
                     
                     if (room.players.length == 1) {
         
-                        rend = <FlatList
+                        this.setState({rend : <FlatList
                         data={rooms}
                         renderItem={({ item }) => (
                             <Item roomId={item.roomId} username={item.username} />
                         )}
                         style={{backgroundColor:'#696969'}}
                     />
+                        })
                     }
+                    
                 });
             }
 
-            if (rend !== null || undefined) {
+            if (this.state.rend !== null || undefined) {
                 //rend = <ListAccessoriesShowcase />
-                rend = <FlatList
+                this.setState({rend : <FlatList
                 data={rooms}
                 renderItem={({ item }) => (
                     <Item roomId={item.roomId} username={item.username} />
                 )}
                 style={{backgroundColor:'#696969'}}
             />
+                })
             }
         }) 
 
         socketB.on('start game', (players) => {
-            startGame(players)
+            startGameMagicNumber(players)
+            startGameQuickWord(players)
         })
 
-        function startGame(players) {
+        function startGameMagicNumber(players) {
             navigation.navigate('MagicNumber')
+
+            const otherPlayer = players.find(p => p.socketId != player.socketId)
+            opponentUsername = otherPlayer.username
+
+            if (player.host && player.turn) {
+
+                ToastAndroid.show("Your turn !", ToastAndroid.SHORT);
+
+            }
+        }
+
+        function startGameQuickWord(players) {
+            navigation.navigate('QuickWord')
 
             const otherPlayer = players.find(p => p.socketId != player.socketId)
             opponentUsername = otherPlayer.username
@@ -196,20 +215,13 @@ export default class Pregame extends React.Component {
                     <Text style={styles.title}>Rooms avaible tap to join</Text>
                     </View>
                     {/* <FlatList
-                        data={DATA}
-                        renderItem={({ item }) => (
-                            <Item roomID={item.roomID} playerName={item.playerName} />
-                        )}
-                        style={{backgroundColor:'#696969'}}
-                    /> */}
-                    {/* <FlatList
                 data={rooms}
                 renderItem={({ item }) => (
                     <Item roomId={item.roomId} username={item.username} />
                 )}
                 style={{backgroundColor:'#696969'}}
             /> */}
-
+            {this.state.rend}
                 
             </SafeAreaView>
         );

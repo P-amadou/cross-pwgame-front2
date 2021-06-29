@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, StatusBar, View, TextInput, TouchableOpacity, StyleSheet, Modal, Button, SafeAreaView } from 'react-native';
+import { player } from '../pregame';
 
 let numberInput;
 let user1Point = 0;
@@ -39,6 +40,9 @@ export default class MagicNumber extends React.Component {
                 this.setState({plus: true})  
             }
             this.setState({ loser: true })
+        }
+        if (player.points == 3) {
+            player.win = true
         }
     }
     screenLoad() {
@@ -82,8 +86,9 @@ export default class MagicNumber extends React.Component {
                         <View style={{ backgroundColor: "#000", flex: 1 }}>
                             <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
                                 <Text style={{ fontSize: 50 }}>You win congrats!</Text>
+                                {player.points++}
                                 {this.textInput.clear()}
-                                <Button title="Close" onPress={() => { this.setState({ show: false,win:false ,finalNum: ''}) }} />
+                                <Button title="Close" onPress={() => { this.setState({ show: false,win:false ,finalNum: ''}),player.win=0 }} />
                             </View>
                         </View>
                     </Modal> : <Text></Text>}
@@ -97,7 +102,14 @@ export default class MagicNumber extends React.Component {
                                 </View>
                             </View>
                         </Modal> : <Text></Text>}
-
+                        {player.win == true ? <Modal transparent={true} visible={this.state.show}>
+                        <View style={{ backgroundColor: "#000", flex: 1 }}>
+                            <View style={{ backgroundColor: "#fff", margin: 50, padding: 40, borderRadius: 10, flex: 1 }}>
+                                <Text style={{ fontSize: 50 }}>You win congrats!</Text>
+                                <Button title="Close" onPress={() => { this.setState({ show: false,winner:false ,finalNum: ''}) }} />
+                            </View>
+                        </View>
+                    </Modal> : <Text></Text>}
 
 
 
